@@ -1,0 +1,6 @@
+1. exploring techniques of how you can program various hpc system which are composed of different cpus/gpus etc.
+2. choosing (only) one of the high level frameworks for example 
+3. tutors help with the paper and presentation structure
+4. there are no obligatory prerequisites nor any expected ones 
+5. only the basic concepts are to be handled (mainly starting from the scratch)
+6. optional: we can communicate with the experienced people/personnel from Max Planck 
