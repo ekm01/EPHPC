@@ -1,9 +1,14 @@
 # Structure
 1. **Abstract**
-1. **Introduction**
+1. **Introduction & Background**
     1. Tensorflow Version 1 and 2 -> Code Execution
-2. What Tensorflow provides internally -> Libraries
-3. Exploiting
+    2. Importance of Scalability, Efficiency, Portability in ML
+2. Main Part
+    1. What Tensorflow provides internally -> Libraries
+    2. Exploiting library to accelerate -> MPI, Horovod, Ray
+    3. Data Parallelism
+    4. Task Parallelism
+    5. Model Parallelism -> CNN
 
 
 # Literature Links
