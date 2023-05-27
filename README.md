@@ -1,3 +1,11 @@
+# Structure
+1. **Abstract**
+1. **Introduction**
+    1. Tensorflow Version 1 and 2 -> Code Execution
+2. What Tensorflow provides internally -> Libraries
+3. Exploiting
+
+
 # Literature Links
 1. **TensorFlow: Large-Scale Machine Learning on Heterogeneous Distributed Systems:**: https://arxiv.org/pdf/1603.04467.pdf
 2. **Horovod:** https://horovod.readthedocs.io/en/stable/
