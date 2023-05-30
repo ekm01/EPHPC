@@ -2,5 +2,6 @@
 \contentsline {section}{\numberline {1}Introduction}{4}{}%
 \contentsline {section}{\numberline {2}Execution of a Graph}{5}{}%
 \contentsline {section}{\numberline {3}Distributed (Multiple-Device) Implementation}{6}{}%
-\contentsline {subsection}{\numberline {3.1}Resource Management \& Mapping of the Nodes}{6}{}%
+\contentsline {subsection}{\numberline {3.1}Mapping of the Nodes}{6}{}%
 \contentsline {subsection}{\numberline {3.2}Intercommunication between Devices}{6}{}%
+\contentsline {subsection}{\numberline {3.3}Ressource Management}{6}{}%
