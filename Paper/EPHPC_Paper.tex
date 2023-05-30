@@ -79,9 +79,14 @@ In large-scale machine learning, we have to deal with massive data sets over tho
 
 \subsection{Intercommunication between Devices} % (fold)
 \label{sub:intercommunication_between_devices}
-After the node mapping is completed, the full graph is splitted to subgraphs where each subgraph is assigned to a particular device. Due to the structure of the graph, there exist edges between the nodes which are assigned to different devices. Those edges indicate an intercommunication between the concerning devices. 
+After the node mapping is completed, the full graph is splitted to subgraphs where each subgraph is assigned to a particular device. Due to the structure of the graph, there exist edges between the nodes which are assigned to different devices. Those edges indicate an intercommunication between the concerning devices. To handle the intercommunication efficiently, TensorFlow implements two types of nodes which are only responsible for managing the data transmission between the devices: Send-Node and Receive-Node. An edge between the devices is replaced by two edges, one from the node to Send-Node and one from Receive-Node to the other node (in Fig.3).
 
-
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.5\linewidth]{intercommunication}
+  \caption{Before and after replacement}
+  \label{fig:intercommunication}
+\end{figure}
 
 
 \subsection{Ressource Management} % (fold)
