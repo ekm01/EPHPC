@@ -46,19 +46,23 @@ TensorFlow is a free and open-source framework developed by Google Brain, which 
 Client can either execute all or a part of the graph with the help of the session, where he interacts with the processes that regulate access to devices. In addition to that, TensorFlow system itself has different implementations for execution mechanisms both for single- and multiple-device systems.  
 \section{Execution of a Graph} % (fold)
 \label{sec:execution_of_a_graph}
-Each implementation follows the same standard (Fig.\ 1): Client process calls the master process through the session interface to ignite the execution. An arbitrary number of worker processes, each of which executes a subgraph, are called by the master process. Master mostly distributes the operations as well as the data tensors to the workers. Each worker is responsible for one or more devices. The number of workers depends on the architecture of the system. As we are going to focus on efficiency, scalability and portability of TensorFlow in terms of HPC systems, we have to take a closer look at the distributed (multiple-device) implementation.
-
+Each implementation follows the same standard (Fig.\ 1): Client process calls the master process through the session interface to ignite the execution. An arbitrary number of worker processes, each of which executes a subgraph, are called by the master process. Each worker is responsible for one or more devices. Master distributes the operations as well as the data tensors to the workers. Also, a worker can fetch the data by itself directly from storage system to the device's memory. The number of workers depends on the architecture of the system. As we are going to focus on efficiency, scalability and portability of TensorFlow in terms of HPC systems, we have to take a closer look at the distributed implementation.
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.5\linewidth]{executionofgraph}
-  \caption[placeholder]{Master and Worker processes of a distributed system\footnotemark} 
+ \includegraphics[width=0.2\linewidth]{graph}
+\caption[placeholder]{Subgraph example for a neural network\footnotemark}  
+
+\includegraphics[width=0.5\linewidth]{executionofgraph}
+ \caption[placeholder]{Master and Worker processes of a distributed system\footnotemark} 
   \label{fig:executionofgraph}
 \end{figure}
-\footnotetext{https://www.oreilly.com/api/v2/epubs/9781787281349/files/assets/Ch09-Fig11.png}
-\section{Distributed (Multiple-Device) Implementation} % (fold)
-\label{sec:multiple_device_execution_of_a_graph}
-When it comes to a system with a single device and a memory, the execution is fairly simple: Place the data into the memory, map all the operations to the device and let it execute them sequentially.
-
+\addtocounter{footnote}{-2}
+\stepcounter{footnote}\footnotetext{Martin Abadi, Ashish Agarwal, ..., "TensorFlow: Large-Scale Machine Learning on Heterogeneous Distributed Systems," November 9, 2015, p.\ 3, fig.\ 2}
+\stepcounter{footnote}\footnotetext{https://www.oreilly.com/api/v2/epubs/9781787281349/files/assets/Ch09-Fig11.png}
+\subsection{Distributed (Multiple-Device) Implementation} % (fold)
+\label{subsec:multiple_device_execution_of_a_graph}
+If we consider a system with a single device, the execution is fairly simple: A worker process is created for the device. Data is placed into the memory and all the nodes are mapped to the same device. The device executes them in an order according to the control dependencies between the nodes.
+\\ \\However, in the case of multiple devices, we encounter a handful of programming challenges as to resource management, mapping of the nodes to the devices and intercommunication between the devices in terms of data transfer.
 
 
 
