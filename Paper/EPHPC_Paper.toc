@@ -4,4 +4,5 @@
 \contentsline {section}{\numberline {3}Distributed (Multiple-Device) Implementation}{6}{}%
 \contentsline {subsection}{\numberline {3.1}Mapping of the Nodes}{6}{}%
 \contentsline {subsection}{\numberline {3.2}Intercommunication between Devices}{6}{}%
-\contentsline {subsection}{\numberline {3.3}Ressource Management}{7}{}%
+\contentsline {subsection}{\numberline {3.3}Resource Management}{7}{}%
+\contentsline {section}{\numberline {4}More Optimization Methods for Efficiency}{7}{}%

@@ -70,7 +70,7 @@ Each implementation follows the same standard (Fig.\ 2): Firstly, client process
 
 \section{Distributed (Multiple-Device) Implementation} % (fold)
 \label{sec:multiple_device_execution_of_a_graph}
-If we consider a system with a single device, the execution is fairly simple: A worker process is created for the device. Data is placed into the memory and all the nodes are mapped to the same device. The device executes them in an order according to the control dependencies between the nodes. However, in the case of an HPC system with multiple devices, we encounter a handful of programming challenges as to resource management, mapping of the nodes to the devices and intercommunication between different devices which includes any type of data transmission (e.g.\ transmitting output of a node to another node as input) required for the operation to be executed.
+If we consider a system with a single device, the execution is fairly simple: A worker process is created for the device. Data is placed into the memory and all the nodes are mapped to the same device. The device executes them in an order according to the control dependencies between the nodes. However, in the case of an HPC system with multiple devices and workers running on different machines, we encounter a handful of programming challenges as to resource management, mapping of the nodes to the different devices and intercommunication between them which includes any type of data transmission (e.g.\ transmitting output of a node to another node as input) required for an operation to be executed.
 
 \subsection{Mapping of the Nodes} % (fold)
 \label{sub:mapping_of_nodes}
@@ -79,31 +79,36 @@ In large-scale machine learning, we have to deal with massive data sets over tho
 
 \subsection{Intercommunication between Devices} % (fold)
 \label{sub:intercommunication_between_devices}
-After the node mapping is completed, the full graph is splitted to subgraphs where each subgraph is assigned to a particular device. Due to the structure of the graph, there exist edges between the nodes which are assigned to different devices. Those edges indicate an intercommunication between the concerning devices. To handle the intercommunication efficiently, TensorFlow implements two types of nodes which are only responsible for managing the data transmission between the devices: Send-Node and Receive-Node. An edge between the devices is replaced by two edges, one from the node to Send-Node and one from Receive-Node to the other node (in Fig.3).
+After the node mapping is completed, the full graph is splitted to subgraphs where each subgraph is assigned to a particular device. Due to the structure of the graph, there exist edges between the nodes which are assigned to different devices. Those edges indicate an intercommunication between the concerning devices. To handle the intercommunication efficiently, TensorFlow implements two types of nodes which are only responsible for managing the data transfer from one particular device to another at runtime (in Fig.\ 3): Send-Node and Receive-Node. An edge between the devices ($x \rightarrow y$) is replaced by two edges, one from the node to Send-Node ($x \rightarrow send$) and one from Receive-Node to the other node ($recv \rightarrow y$).
 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.5\linewidth]{intercommunication}
-  \caption{Before and after replacement}
+  \caption{Replacement of an edge through Send- and Receive-Node}
   \label{fig:intercommunication}
 \end{figure}
+\hspace{-0.52cm}This way, synchronization of workers (workers for $Device \ A$ and $Device\ B$) is merely delegated to Send- and Receive-Node, where the scheduling and monitoring of intercommunication becomes decentralized across the workers. Therefore, there is no need for the master to coordinate the scheduling of every single node, which directly contributes to scalability.
 
-
-\subsection{Ressource Management} % (fold)
+\subsection{Resource Management} % (fold)
 \label{sub:ressource_management}
+
+
+
+\section{More Optimization Methods for Efficiency} % (fold)
+\label{sec:more_optimization_methods_for_efficiency}
+
 
 
 
 
 
 \pagebreak
-\begin{thebibliography}{9}
+\begin{thebibliography}{3}
 \bibitem{first}
 Martin Abadi, Ashish Agarwal, Paul Barham, Eugene Brevdo, Zhifeng Chen, Craig Citro, Greg S. Corrado, Andy Davis, Jeffrey Dean, Matthieu Devin, Sanjay Ghemawat, Ian Goodfellow, Andrew Harp, Geoffrey Irving, Michael Isard, Yangqing Jia, Rafal Jozefowicz, Lukasz Kaiser, Manjunath Kudlur, Josh Levenberg,\ldots Xiaoqiang Zheng (November 9, 2015): TensorFlow: Large-Scale Machine Learning on Heterogeneous Distributed Systems 
 
 \bibitem{lamport94}
-Leslie Lamport (1994) \emph{\LaTeX: a document preparation system}, Addison
-Wesley, Massachusetts, 2nd ed.
+Marcos Novaes (January 10, 2021): Scalable Machine Learning with Tensorflow 2.X
 \end{thebibliography}
 
 
