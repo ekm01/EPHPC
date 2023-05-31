@@ -53,7 +53,7 @@ An example graph for a neural network is shown in Figure 1. $W, x$ are tensors w
 \end{figure}
 \section{Execution of a Graph} % (fold)
 \label{sec:execution_of_a_graph}
-Each implementation follows the same standard (Fig.\ 2): Firstly, client process calls the master process through the session interface to ignite the execution. An arbitrary number of worker processes, each of which executes a subgraph, are called by the master process. Each worker is responsible for one or more devices. The number of workers depends on the architecture of the system. Master distributes the operations as well as the data tensors to the workers. Also, a worker can fetch the data by itself directly from storage system to the device's memory. Finally, the results are collected by the master and presented to the client process.
+Each implementation follows the same standard (Fig.\ 2): Firstly, client process calls the master process through the session interface to ignite the execution. An arbitrary number of worker processes, each of which executes a subgraph, are called by the master process. Each worker is responsible for one or more devices. The number of workers depends on the architecture of the system. Master distributes the operations as well as the data tensors to the workers. Also, a worker can fetch the data by itself directly from storage system to the device's memory. Finally, the results are collected by the master and presented to the client process \cite{first}.
 \begin{figure}[h!]
   \centering
 \includegraphics[width=0.5\linewidth]{executionofgraph}
@@ -65,21 +65,21 @@ Each implementation follows the same standard (Fig.\ 2): Firstly, client process
 \stepcounter{footnote}\footnotetext{Martin Abadi, Ashish Agarwal, ..., "TensorFlow: Large-Scale Machine Learning on Heterogeneous Distributed Systems," November 9, 2015, p.\ 3, fig.\ 2}
 \stepcounter{footnote}\footnotetext{https://www.oreilly.com/api/v2/epubs/9781787281349/files/assets/Ch09-Fig11.png}
 
-\hspace{-0.51cm}A graph can scale up immensely due to massive real-world training sets. To ensure efficiency while dealing with such graphs, we need parallelism in terms of task and data. This is why we have to utilize HPC clusters in the first place to save us a huge amount of the computation time.\ As we are going to focus on how to achieve efficiency and scalability while programming with TensorFlow on HPC systems, we first have to take a closer look at the distributed implementation of TensorFlow \cite{first}.
+\hspace{-0.51cm}A graph can grow immensely due to massive real-world training sets. To ensure efficiency while dealing with such graphs, we need parallelism in terms of task and data. This is why we have to utilize HPC clusters in the first place to save us a huge amount of the computation time.\ As we are going to focus on how to achieve efficiency and scalability while programming with TensorFlow on HPC systems, we first have to take a closer look at the distributed implementation of TensorFlow.
 
 
-\section{Distributed (Multiple-Device) Implementation} % (fold)
+\section{Distributed (Multiple-Device) Implementation of Tensorflow} % (fold)
 \label{sec:multiple_device_execution_of_a_graph}
-If we consider a system with a single device, the execution is fairly simple: A worker process is created for the device. Data is placed into the memory and all the nodes are mapped to the same device. The device executes them in an order according to the control dependencies between the nodes. However, in the case of an HPC system with multiple devices and workers running on different machines, we encounter a handful of programming challenges as to resource management, mapping of the nodes to the different devices and intercommunication between them which includes any type of data transmission (e.g.\ transmitting output of a node to another node as input) required for an operation to be executed.
+In large-scale machine learning, we have to deal with massive data sets over thousands of petabytes. In order to train a model on such data set and construct a dataflow graph for the model, we need to parallelize our node execution and also divide our data into subsets across multiple devices of our system.
+\\ \\If we consider a system with a single device, the execution is fairly simple: A worker process is created for the device. Data is placed into the memory and all the nodes are mapped to the same device. The device executes them in an order according to the control dependencies between the nodes. However, in the case of an HPC system with multiple devices and workers running on different machines, we encounter a handful of programming challenges as to memory management, mapping of the nodes to the different devices and intercommunication between them which includes any type of data transmission (e.g.\ transmitting output of a node to another node as input) required for an operation to be executed \cite{first}.
 
 \subsection{Mapping of the Nodes} % (fold)
-\label{sub:mapping_of_nodes}
-In large-scale machine learning, we have to deal with massive data sets over thousands of petabytes. In order to train a model on such data set, hence construct a dataflow graph, we need to parallelize our node execution and also divide our data into subsets across multiple devices of our system. 
-\\ \\TensorFlow uses a greedy algorithm for mapping the nodes: A cost model is prepared by estimating the size of input and output tensors for each node. Graph is traversed according to the dependencies between the nodes. For each node, the execution is simulated with the input tensors on a set of available devices which provide a kernel implementation for the respective operation. Completion time including the time for intercommunication with other devices is either measured or estimated on each device. The results are then gathered and registered on the cost model as well which contains the cost for each particular operation. Finally, the cost model is consulted to make a decision about the mapping. The device with the minimal cost is selected for the operation execution.
+\label{sub:mapping_of_nodes} 
+TensorFlow uses a greedy algorithm for mapping the nodes: A cost model is prepared by estimating the size of input and output tensors for each node. Graph is traversed according to the dependencies between the nodes. For each node, the execution is simulated with the input tensors on a set of available devices which provide a kernel implementation for the respective operation. Completion time including the time for intercommunication with other devices is either measured or estimated on each device. The results are then gathered and registered on the cost model as well which contains the cost for each particular operation. Finally, the cost model is consulted to make a decision about the mapping. The device with the minimal cost is selected for the operation execution \cite{first}.
 
 \subsection{Intercommunication between Devices} % (fold)
 \label{sub:intercommunication_between_devices}
-After the node mapping is completed, the full graph is splitted to subgraphs where each subgraph is assigned to a particular device. Due to the structure of the graph, there exist edges between the nodes which are assigned to different devices. Those edges indicate an intercommunication between the concerning devices. To handle the intercommunication efficiently, TensorFlow implements two types of nodes which are only responsible for managing the data transfer from one particular device to another at runtime (in Fig.\ 3): Send-Node and Receive-Node. An edge between the devices ($x \rightarrow y$) is replaced by two edges, one from the node to Send-Node ($x \rightarrow send$) and one from Receive-Node to the other node ($recv \rightarrow y$).
+After the node mapping is completed, the full graph is splitted to subgraphs where each subgraph is assigned to a particular device. Due to the structure of the graph, there exist edges between the nodes which are assigned to different devices. Those edges indicate an intercommunication between the concerning devices. To handle the intercommunication efficiently, TensorFlow implements two types of nodes which are only responsible for managing the data transfer from one particular device to another at runtime (in Fig.\ 3): Send-Node and Receive-Node. An edge between the devices ($x \rightarrow y$) is replaced by two edges, one from the node to Send-Node ($x \rightarrow send$) and one from Receive-Node to the other node ($recv \rightarrow y$) \cite{first}.
 
 \begin{figure}[h!]
   \centering
@@ -87,10 +87,32 @@ After the node mapping is completed, the full graph is splitted to subgraphs whe
   \caption{Replacement of an edge through Send- and Receive-Node}
   \label{fig:intercommunication}
 \end{figure}
-\hspace{-0.52cm}This way, synchronization of workers (workers for $Device \ A$ and $Device\ B$) is merely delegated to Send- and Receive-Node, where the scheduling and monitoring of intercommunication becomes decentralized across the workers. Therefore, there is no need for the master to coordinate the scheduling of every single node, which directly contributes to scalability.
+\hspace{-0.52cm}This way, synchronization of workers (workers for $Device \ A$ and $Device\ B$) is merely delegated to Send- and Receive-Node, where the scheduling and monitoring of intercommunication becomes decentralized across the workers. Therefore, there is no need for the master to coordinate the scheduling of every single node, which directly contributes to scalability \cite{first}.
 
-\subsection{Resource Management} % (fold)
-\label{sub:ressource_management}
+\subsection{Memory Management} % (fold)
+\label{sub:memory_management}
+As crucial as performance is, so is memory usage. In scalable machine learning, our aim is to minimize the computation time as well as to optimize the memory management, so that we get most of the job done in a small amount of time without wasting too much memory. When it comes to HPC systems, there are mainly two models which are different architectural approaches as to memory management: shared memory model and distributed memory model \cite{second}.
+
+\subsubsection{Shared Memory Model} % (fold)
+\label{ssub:shared_memory_model}
+In a shared memory model, all the worker processes of different devices have access to a common memory, where each worker can modify the data within the shared region as if it is its own address space. Workers can intercommunicate with each other through the shared memory without the need of an explicit communication nor a message passing interface (in Fig.\ 4). The only thing we would need is a method of synchronization to avoid the memory contention. As a result, the latency for intercommunication is constant as well as minimal for each single device, which is an efficient way to process and access the data. Since we do not need any explicit mechanism, implementing the shared memory model is not a complex task, which yields the opportunity to easily program and debug on such system \cite{second} \cite{third}. 
+\\ \\However, there are some drawbacks as to the shared memory model in terms of memory capacity, synchronization and scalability. As our machine learning model scales up, it becomes more and more computationally intensive which leads to a significant increase in the number of devices. Thus, the overhead for synchronizing those devices as well as the required capacity would be much higher. This is why we prefer a distributed memory model over a shared model in the case of larger ML-applications.
+
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.5\linewidth]{sharedmemorymodel}
+  \caption{Structure of a shared memory model}
+  \label{fig:sharedmemorymodel}
+\end{figure}
+
+
+\pagebreak
+
+\subsubsection{Distributed Memory Model} % (fold)
+\label{ssub:distributed_memory_model}
+
+
 
 
 
@@ -104,11 +126,17 @@ After the node mapping is completed, the full graph is splitted to subgraphs whe
 
 \pagebreak
 \begin{thebibliography}{3}
+
 \bibitem{first}
 Martin Abadi, Ashish Agarwal, Paul Barham, Eugene Brevdo, Zhifeng Chen, Craig Citro, Greg S. Corrado, Andy Davis, Jeffrey Dean, Matthieu Devin, Sanjay Ghemawat, Ian Goodfellow, Andrew Harp, Geoffrey Irving, Michael Isard, Yangqing Jia, Rafal Jozefowicz, Lukasz Kaiser, Manjunath Kudlur, Josh Levenberg,\ldots Xiaoqiang Zheng (November 9, 2015): TensorFlow: Large-Scale Machine Learning on Heterogeneous Distributed Systems 
 
-\bibitem{lamport94}
-Marcos Novaes (January 10, 2021): Scalable Machine Learning with Tensorflow 2.X
+\bibitem{second}
+Yugesh Verma (October 6, 2021): Building Scalable Machine Learning Models with Tensorflow 2.X
+
+\bibitem{third}
+How do you choose between shared memory and distributed memory systems for your HPC needs?\ Retrieved from https://www.linkedin.com/advice/0/how-do-you-choose-between-shared-memory 
+
+
 \end{thebibliography}
 
 
