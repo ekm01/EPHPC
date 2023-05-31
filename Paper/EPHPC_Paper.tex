@@ -93,33 +93,43 @@ After the node mapping is completed, the full graph is splitted to subgraphs whe
 \label{sub:memory_management}
 As crucial as performance is, so is memory usage. In scalable machine learning, our aim is to minimize the computation time as well as to optimize the memory management, so that we get most of the job done in a small amount of time without wasting too much memory. When it comes to HPC systems, there are mainly two models which are different architectural approaches as to memory management: shared memory model and distributed memory model \cite{second}.
 
-\subsubsection{Shared Memory Model} % (fold)
+\subsubsection{Shared Memory Model} % (fold) 
 \label{ssub:shared_memory_model}
-In a shared memory model, all the worker processes of different devices have access to a common memory, where each worker can modify the data within the shared region as if it is its own address space. Workers can intercommunicate with each other through the shared memory without the need of an explicit communication nor a message passing interface (in Fig.\ 4). The only thing we would need is a method of synchronization to avoid the memory contention. As a result, the latency for intercommunication is constant as well as minimal for each single device, which is an efficient way to process and access the data. Since we do not need any explicit mechanism, implementing the shared memory model is not a complex task, which yields the opportunity to easily program and debug on such system \cite{second} \cite{third}. 
-\\ \\However, there are some drawbacks as to the shared memory model in terms of memory capacity, synchronization and scalability. As our machine learning model scales up, it becomes more and more computationally intensive which leads to a significant increase in the number of devices. Thus, the overhead for synchronizing those devices as well as the required capacity would be much higher. This is why we prefer a distributed memory model over a shared model in the case of larger ML-applications.
+In a shared memory model, all the worker processes of different devices have access to a common memory, where each worker can modify the data within the shared region as if it is its own address space (in Fig.\ 4). Workers can intercommunicate with each other through the shared memory without the need of an explicit communication nor message passing. The only thing we would need is a method of synchronization to avoid the memory contention. As a result, the latency for intercommunication is constant for each single device, which is an efficient way to process and access the data. Since we do not need any explicit mechanism, implementing the shared memory model is not a complex task, which yields the opportunity to easily program and debug on such system \cite{second} \cite{third}. 
+\\ \\However, there are some drawbacks as to the shared memory model in terms of memory capacity, synchronization and scalability. As our machine learning model scales up, it becomes more and more computationally intensive which leads to a significant increase in the number of devices. Thus, the overhead for synchronizing those devices as well as the required capacity would be much higher. This is why we rather prefer a distributed memory model as an efficient solution in the case of larger ML-applications \cite{third}.
 
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.5\linewidth]{sharedmemorymodel}
+  \includegraphics[width=0.4\linewidth]{sharedmemorymodel}
   \caption{Structure of a shared memory model}
   \label{fig:sharedmemorymodel}
 \end{figure}
 
 
-\pagebreak
-
 \subsubsection{Distributed Memory Model} % (fold)
 \label{ssub:distributed_memory_model}
+In a distributed memory model, each device has its own local memory and can directly access only this memory (Fig.\ 5). Data is exchanged between the different workers through a communication network. If a worker wants to access the data of another worker, it uses an explicit communication mechanism such as message passing or remote procedure call. Therefore, we must explicitly implement the intercommunication and coordination between the workers, which is one of the programming challenges, as it adds a significant amount of structural complexity to the system in comparison to the shared memory model \cite{third}. 
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.4\linewidth]{distributedmemorymodel}
+  \caption{Structure of a distributed memory model}
+  \label{fig:distributedmemorymodel}
+\end{figure}
+
+\hspace{-0.52cm}Despite the complexity of the architecture, distributing memory across multiple devices ensures failure tolerance to great extent. If one cluster malfunctions and is unavailable, other clusters in the network can continue executing because they have their own local memories. We can also be much more flexible on a distributed memory system when it comes to assigning tasks to the workers. Each worker can operate independently and access its own data without relying on others. This gives us the freedom to execute different tasks in parallel and asynchronously \cite{second} \cite{third}.
+\\ \\Even though most of the HPC systems have the characteristics of those two memory models combined, the structure of the architecture depends heavily on the use case. For instance, it might be feasible to use a shared memory model in the case of a relatively small convolutional neural network, where we have to constantly compute new gradients in the backpropagation phase and update weights accordingly. By sharing weights and gradients across a common memory region, workers can collaborate efficiently to speed up the training. However, to develop a random forest with a training set of billions of samples, we have to resort to the distributed memory model, as we can parallelize the creation of a batch of decision trees by splitting the training data to our network of workers. Luckily, TensorFlow supports both of the memory models to be as efficient as possible in the creation and execution of a preferred ML-application defined by the client. 
+\\ \\Concepts mentioned above are not the only optimization techniques for efficiency and scalability. There are also a lot more provided by TensorFlow itself. Aside from that, a client can exploit TensorFlow's system by using external libraries and frameworks for further optimization. 
 
 
-
-
-
-\section{More Optimization Methods for Efficiency} % (fold)
+\section{Optimization Methods for Efficiency} % (fold)
 \label{sec:more_optimization_methods_for_efficiency}
 
 
+
+\section{Summary} % (fold)
+\label{sec:summary}
 
 
 
@@ -135,6 +145,9 @@ Yugesh Verma (October 6, 2021): Building Scalable Machine Learning Models with T
 
 \bibitem{third}
 How do you choose between shared memory and distributed memory systems for your HPC needs?\ Retrieved from https://www.linkedin.com/advice/0/how-do-you-choose-between-shared-memory 
+
+\bibitem{fourth}
+Marcos Novaes (January 20, 2021): Scalable Machine Learning with Tensorflow 2.X
 
 
 \end{thebibliography}

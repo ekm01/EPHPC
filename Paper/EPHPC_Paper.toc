@@ -6,5 +6,6 @@
 \contentsline {subsection}{\numberline {3.2}Intercommunication between Devices}{6}{}%
 \contentsline {subsection}{\numberline {3.3}Memory Management}{7}{}%
 \contentsline {subsubsection}{\numberline {3.3.1}Shared Memory Model}{7}{}%
-\contentsline {subsubsection}{\numberline {3.3.2}Distributed Memory Model}{9}{}%
-\contentsline {section}{\numberline {4}More Optimization Methods for Efficiency}{9}{}%
+\contentsline {subsubsection}{\numberline {3.3.2}Distributed Memory Model}{8}{}%
+\contentsline {section}{\numberline {4}Optimization Methods for Efficiency}{9}{}%
+\contentsline {section}{\numberline {5}Summary}{9}{}%
