@@ -6,7 +6,7 @@
 
 
 
-\title{\includegraphics[width=0.43\textwidth]{tumlogo}\hspace{2ex}\includegraphics[width=0.25\textwidth]{maxlogo}\vspace{1ex}\\ \large \textbf{Max Planck Computing and Data Facility \\Chair of Computer Architecture and Parallel Systems} \vspace{10ex}\\ \huge Tensorflow \vspace{2ex}\\
+\title{\includegraphics[width=0.43\textwidth]{tumlogo}\hspace{2ex}\includegraphics[width=0.25\textwidth]{maxlogo}\vspace{1ex}\\ \large \textbf{Max Planck Computing and Data Facility \\Chair of Computer Architecture and Parallel Systems} \vspace{10ex}\\ \huge Efficient Large-Scale Machine Learning with Tensorflow \vspace{6ex}\\
 \large Seminar: Efficient Programming of HPC Systems \\Frameworks and Algorithms\vspace{15ex}}
 
 
@@ -120,7 +120,7 @@ In a distributed memory model, each device has its own local memory and can dire
 
 \hspace{-0.52cm}Despite the complexity of the architecture, distributing memory across multiple devices ensures failure tolerance to great extent. If one cluster malfunctions and is unavailable, other clusters in the network can continue executing because they have their own local memories. We can also be much more flexible on a distributed memory system when it comes to assigning tasks to the workers. Each worker can operate independently and access its own data without relying on others. This gives us the freedom to execute different tasks in parallel and asynchronously \cite{second} \cite{third}.
 \\ \\Even though most of the HPC systems have the characteristics of those two memory models combined, the structure of the architecture depends heavily on the use case. For instance, it might be feasible to use a shared memory model in the case of a relatively small convolutional neural network, where we have to constantly compute new gradients in the backpropagation phase and update weights accordingly. By sharing weights and gradients across a common memory region, workers can collaborate efficiently to speed up the training. However, to develop a random forest with a training set of billions of samples, we have to resort to the distributed memory model, as we can parallelize the creation of a batch of decision trees by splitting the training data to our network of workers. Luckily, TensorFlow supports both of the memory models to be as efficient as possible in the creation and execution of a preferred ML-application defined by the client. 
-\\ \\Concepts mentioned above are not the only optimization techniques for efficiency and scalability. There are also a lot more provided by TensorFlow itself. Aside from that, a client can exploit TensorFlow's system by using external libraries and frameworks for further optimization. 
+\\ \\Concepts mentioned above are not the only optimization techniques for efficiency and scalability. There are also a lot more provided by TensorFlow itself. Aside from that, a client can exploit TensorFlow's system by using external frameworks for further optimization. 
 
 
 \section{Optimizations within TensorFlow} % (fold)
@@ -142,10 +142,14 @@ As we train a model with TensorFlow on an HPC system, its computational graph ca
 Eager execution refers to a functionality, first introduced in TensorFlow 2, that allows us to perform TensorFlow operations and return the results immediately, thus the computational graph is created dynamically at runtime and executed instantly. In the case of default graph execution in TensorFlow 1, the graph is created beforehand and then executed in a separate step \cite{fourth}. 
 \\ \\Having the eager execution mode on, we could save us the time spent for the graph creation, which speeds up the development process and iteration of the models. It also allows dynamic allocation of the resources during execution. This way, the resources such as devices and memory can be used more efficiently, as they are assigned only for the needed computations \cite{fourth}.
 
-\section{Optimization outside of TensorFlow} % (fold)
+\subsection{Code Portability} % (fold)
+\label{sub:code_portability}
+TensorFlow provides features and mechanisms to ensure the code portability across different HPC architectures. One of the features is the support for a variety of operating systems. Moreover, TensorFlow enables developers to write their code independent of the specific hardware through the abstraction of the underlying hardware. Hence, TensorFlow models can run on HPC systems with different devices, CPUs, GPUs or TPUs without having to adapt the code for each specific hardware. TensorFlow also offers compatibility with several HPC-specific libraries such as MPI for distributed communication and CUDA for computation on NVIDIA GPUs \cite{fifth}.
+
+
+\section{Optimizations outside of TensorFlow - Horovod} % (fold)
 \label{sec:optimization_outside_of_tensorFlow}
-
-
+Horovod is one of the frameworks that accelerates the training of large-scale deep learning models on distributed systems by exploiting the standard execution mechanism of Tensorflow. Motivation for Horovod Project is to develop large-scale ML-applications by utilizing multiple GPUs simultaneously. Fundamental concepts of Horovod are based on the MPI library, which is specifically designed for HPC systems and enables the intercommunication between the worker processes over the network of distributed clusters \cite{sixth}.
 
 
 \section{Summary} % (fold)
@@ -164,14 +168,16 @@ Martin Abadi, Ashish Agarwal, Paul Barham, Eugene Brevdo, Zhifeng Chen, Craig Ci
 Yugesh Verma (October 6, 2021): Building Scalable Machine Learning Models with Tensorflow 2.X
 
 \bibitem{third}
-How do you choose between shared memory and distributed memory systems for your HPC needs?\ Retrieved from https://www.linkedin.com/advice/0/how-do-you-choose-between-shared-memory 
+How do you choose between shared memory and distributed memory systems for your HPC needs?,\ Retrieved from https://www.linkedin.com/advice/0/how-do-you-choose-between-shared-memory 
 
 \bibitem{fourth}
 Orhan G. Yalçın (October 23, 2020): Eager Execution vs.\ Graph Execution in TensorFlow: Which is Better? 
 
 \bibitem{fifth}
-Distributed training with TensorFlow (last updated on May 12, 2023) Retrieved from https://www.tensorflow.org/guide/distributed\textunderscore training
+Essential documentation, Retrieved from https://www.tensorflow.org/guide 
 
+\bibitem{sixth}
+Horovod documentation, Retrieved from https://horovod.readthedocs.io/
 \end{thebibliography}
 
 

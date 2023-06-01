@@ -11,5 +11,6 @@
 \contentsline {subsection}{\numberline {4.1}Common Subexpression Elimination}{9}{}%
 \contentsline {subsection}{\numberline {4.2}Support for Asynchronous Execution}{9}{}%
 \contentsline {subsection}{\numberline {4.3}Eager Execution}{10}{}%
-\contentsline {section}{\numberline {5}Optimization outside of TensorFlow}{10}{}%
-\contentsline {section}{\numberline {6}Summary}{10}{}%
+\contentsline {subsection}{\numberline {4.4}Code Portability}{10}{}%
+\contentsline {section}{\numberline {5}Optimizations outside of TensorFlow - Horovod}{10}{}%
+\contentsline {section}{\numberline {6}Summary}{11}{}%
