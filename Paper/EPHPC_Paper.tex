@@ -30,7 +30,7 @@ In the last decade, machine learning has made tremendous progress and become a k
 
 \pagebreak
 
-\section{Introduction} % (fold)
+\section{Introduction \& Background} % (fold)
 \label{sec:introduction}
 TensorFlow is a free and open-source framework developed by Google Brain, which finds its application widely in the field of machine learning and artificial intelligence. It is used to build and train large-scale models according to the client's preferences and provided data sets. In order to train a model, TensorFlow carries out several computations by mapping them onto a variety of hardware, such as mobile devices or systems consisting of multiple computational units with hundreds of GPUs. Those computations are represented in a "directed dataflow graph"\footnote{Martin Abadi, Ashish Agarwal, \ldots, "TensorFlow: Large-Scale Machine Learning on Heterogeneous Distributed Systems," November 9, 2015, p.\ 1, para.\ 2} as a whole, which is then compiled statically or dynamically depending on the version of Tensorflow \cite{first}. 
 \\ \\To construct such graph, a client needs to create a session which is an interface with methods of its own. Through those methods, the client can introduce his data set to Tensorflow's system, define his model and its specifications. A graph is typically composed of the following \cite{first}:
@@ -47,7 +47,7 @@ An example graph for a neural network is shown in Figure 1. $W, x$ are tensors w
 \begin{figure}[h!]
   \centering
    \includegraphics[width=0.25\linewidth]{graph}
-\caption[placeholder]{Subgraph example of a neural network for a single neuron\footnotemark}
+\caption[placeholder]{Subgraph example of a neural network for a single neuron}
   \label{fig:graph_caption_placeholder_subgraph_example_for_a_neural_networkfootnotemark}
 \end{figure}
 \section{Execution of a Graph} % (fold)
@@ -56,13 +56,9 @@ Each implementation follows the same standard (Fig.\ 2): Firstly, client process
 \begin{figure}[h!]
   \centering
 \includegraphics[width=0.5\linewidth]{executionofgraph}
- \caption[placeholder]{Master and Worker processes of a distributed system\footnotemark} 
+ \caption[placeholder]{Master and Worker processes of a distributed system} 
   \label{fig:executionofgraph}
 \end{figure}
-
-\addtocounter{footnote}{-2}
-\stepcounter{footnote}\footnotetext{Martin Abadi, Ashish Agarwal, ..., "TensorFlow: Large-Scale Machine Learning on Heterogeneous Distributed Systems," November 9, 2015, p.\ 3, fig.\ 2}
-\stepcounter{footnote}\footnotetext{https://www.oreilly.com/api/v2/epubs/9781787281349/files/assets/Ch09-Fig11.png}
 
 \hspace{-0.51cm}A graph can grow immensely due to massive real-world training sets. To ensure efficiency while dealing with such graphs, we need parallelism in terms of task and data. This is why we have to utilize HPC clusters in the first place to save us a huge amount of the computation time.\ As we are going to focus on how to achieve efficiency and scalability while programming with TensorFlow on HPC systems, we first have to take a closer look at the distributed implementation of TensorFlow.
 
