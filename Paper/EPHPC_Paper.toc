@@ -9,6 +9,7 @@
 \contentsline {subsubsection}{\numberline {3.3.2}Distributed Memory Model}{8}{}%
 \contentsline {section}{\numberline {4}Optimizations within TensorFlow}{9}{}%
 \contentsline {subsection}{\numberline {4.1}Common Subexpression Elimination}{9}{}%
-\contentsline {subsection}{\numberline {4.2}Support for asynchronous kernels}{10}{}%
+\contentsline {subsection}{\numberline {4.2}Support for Asynchronous Execution}{9}{}%
 \contentsline {subsection}{\numberline {4.3}Eager Execution}{10}{}%
-\contentsline {section}{\numberline {5}Summary}{10}{}%
+\contentsline {section}{\numberline {5}Optimization outside of TensorFlow}{10}{}%
+\contentsline {section}{\numberline {6}Summary}{10}{}%

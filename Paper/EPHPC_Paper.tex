@@ -132,14 +132,19 @@ In this chapter, we are going to go through some of the optimizations embedded i
 Common Subexpression Elimination is an optimization technique which aims to eliminate recurring operations. When constructing TensorFlow graphs, certain nodes, whose operations produce the same intermediate result (they are generated through a common subexpression), may be created multiple times. This can lead to unnecessary computation effort, especially for large models. The reason for the repeated creation could either be the client program itself or the specifications of the preferred model \cite{first}.
 \\ \\Tensorflow has an algorithm to identify such nodes in the computation graph, where it replaces them with a single node, then redirects the graph. This avoids redundant calculations and improves the efficiency of the execution of the graph \cite{first}.
 
-\subsection{Support for asynchronous kernels} % (fold)
+\subsection{Support for Asynchronous Execution} % (fold)
 \label{sub:support_for_asynchronous_kernels}
-
+As we train a model with TensorFlow on an HPC system, its computational graph can be executed mainly in two ways on the multiple devices. If the operations on a number of devices are synchronous, workers of those devices wait for the results of each other before proceeding with the next operation. This execution mode ensures that the operations are executed in a specified fashion according to the control dependencies between the nodes of the graph \cite{first} \cite{fifth}.
+\\ \\Outside of synchronous operations, there are asynchronous ones, as some operations can be executed independently of each other and there is no waiting for the result of other operations. This allows multiple devices to execute unblocked at any time, resulting in potentially better utilization of available resources in some cases (e.g.\ a multi-model ML-application) \cite{fifth}.
 
 \subsection{Eager Execution} % (fold)
 \label{sub:eager_execution}
 Eager execution refers to a functionality, first introduced in TensorFlow 2, that allows us to perform TensorFlow operations and return the results immediately, thus the computational graph is created dynamically at runtime and executed instantly. In the case of default graph execution in TensorFlow 1, the graph is created beforehand and then executed in a separate step \cite{fourth}. 
 \\ \\Having the eager execution mode on, we could save us the time spent for the graph creation, which speeds up the development process and iteration of the models. It also allows dynamic allocation of the resources during execution. This way, the resources such as devices and memory can be used more efficiently, as they are assigned only for the needed computations \cite{fourth}.
+
+\section{Optimization outside of TensorFlow} % (fold)
+\label{sec:optimization_outside_of_tensorFlow}
+
 
 
 
@@ -164,6 +169,8 @@ How do you choose between shared memory and distributed memory systems for your 
 \bibitem{fourth}
 Orhan G. Yalçın (October 23, 2020): Eager Execution vs.\ Graph Execution in TensorFlow: Which is Better? 
 
+\bibitem{fifth}
+Distributed training with TensorFlow (last updated on May 12, 2023) Retrieved from https://www.tensorflow.org/guide/distributed\textunderscore training
 
 \end{thebibliography}
 
