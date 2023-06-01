@@ -1,16 +1,16 @@
 \contentsline {section}{Abstract}{3}{}%
-\contentsline {section}{\numberline {1}Introduction}{3}{}%
-\contentsline {section}{\numberline {2}Execution of a Graph}{4}{}%
-\contentsline {section}{\numberline {3}Distributed Implementation of Tensorflow}{5}{}%
-\contentsline {subsection}{\numberline {3.1}Mapping of the Nodes}{5}{}%
+\contentsline {section}{\numberline {1}Introduction}{4}{}%
+\contentsline {section}{\numberline {2}Execution of a Graph}{5}{}%
+\contentsline {section}{\numberline {3}Distributed Implementation of Tensorflow}{6}{}%
+\contentsline {subsection}{\numberline {3.1}Mapping of the Nodes}{6}{}%
 \contentsline {subsection}{\numberline {3.2}Intercommunication between Devices}{6}{}%
-\contentsline {subsection}{\numberline {3.3}Memory Management}{6}{}%
+\contentsline {subsection}{\numberline {3.3}Memory Management}{7}{}%
 \contentsline {subsubsection}{\numberline {3.3.1}Shared Memory Model}{7}{}%
-\contentsline {subsubsection}{\numberline {3.3.2}Distributed Memory Model}{7}{}%
-\contentsline {section}{\numberline {4}Optimizations within TensorFlow}{8}{}%
+\contentsline {subsubsection}{\numberline {3.3.2}Distributed Memory Model}{8}{}%
+\contentsline {section}{\numberline {4}Optimizations within TensorFlow}{9}{}%
 \contentsline {subsection}{\numberline {4.1}Common Subexpression Elimination}{9}{}%
 \contentsline {subsection}{\numberline {4.2}Support for Asynchronous Execution}{9}{}%
-\contentsline {subsection}{\numberline {4.3}Eager Execution}{9}{}%
+\contentsline {subsection}{\numberline {4.3}Eager Execution}{10}{}%
 \contentsline {subsection}{\numberline {4.4}Code Portability}{10}{}%
 \contentsline {section}{\numberline {5}Optimizations outside of TensorFlow - Horovod}{10}{}%
 \contentsline {section}{\numberline {6}Summary}{11}{}%
