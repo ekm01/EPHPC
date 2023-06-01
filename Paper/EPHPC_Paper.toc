@@ -1,7 +1,7 @@
 \contentsline {section}{Abstract}{3}{}%
 \contentsline {section}{\numberline {1}Introduction}{4}{}%
 \contentsline {section}{\numberline {2}Execution of a Graph}{5}{}%
-\contentsline {section}{\numberline {3}Distributed (Multiple-Device) Implementation of Tensorflow}{6}{}%
+\contentsline {section}{\numberline {3}Distributed Implementation of Tensorflow}{6}{}%
 \contentsline {subsection}{\numberline {3.1}Mapping of the Nodes}{6}{}%
 \contentsline {subsection}{\numberline {3.2}Intercommunication between Devices}{6}{}%
 \contentsline {subsection}{\numberline {3.3}Memory Management}{7}{}%

@@ -6,7 +6,7 @@
 
 
 
-\title{\includegraphics[width=0.43\textwidth]{tumlogo}\hspace{2ex}\includegraphics[width=0.25\textwidth]{maxlogo}\vspace{1ex}\\ \large \textbf{Max Planck Computing and Data Facility \\Chair of Computer Architecture and Parallel Systems} \vspace{10ex}\\ \huge Efficient Large-Scale Machine Learning with Tensorflow \vspace{6ex}\\
+\title{\includegraphics[width=0.43\textwidth]{tumlogo}\hspace{2ex}\includegraphics[width=0.25\textwidth]{maxlogo}\vspace{1ex}\\ \large \textbf{Max Planck Computing and Data Facility \\Chair of Computer Architecture and Parallel Systems} \vspace{10ex}\\ \huge Efficient Large-Scale Machine Learning with Tensorflow on HPC Systems \vspace{6ex}\\
 \large Seminar: Efficient Programming of HPC Systems \\Frameworks and Algorithms\vspace{15ex}}
 
 
@@ -44,7 +44,7 @@ TensorFlow is a free and open-source framework developed by Google Brain, which 
 \item \textit{Device:} Devices are computational units on a machine that are utilized by TensorFlow's system to execute kernels. (e.g.\ GPUs)
 \end{itemize}
 An example graph for a neural network is shown in Figure 1. $W, x$ are tensors which flow into 1.\ node with the operation $MatMul$ as inputs. Matrix multiplication of $W$ and $x$ is then computed and the result as well as tensor $b$ are fed into 2.\ node. Addition of those flow into 3.\ node, where the $ReLU$-function is applied on the addition. In the end, final node is executed, thus cost of the trained model $C$ is computed and returned.
-\\ \\Client can either execute all or a part of the graph with the help of the session, where he interacts with the processes that regulate access to devices. In addition to that, TensorFlow system itself has different implementations for execution mechanisms both for single- and multiple-device systems \cite{first}.
+\\ \\Client can either execute all or a part of the graph with the help of the session, where he interacts with the processes that regulate access to devices. In addition to that, TensorFlow system itself has different implementations for execution mechanisms both for single-device and distributed systems \cite{first}.
 \begin{figure}[h!]
   \centering
    \includegraphics[width=0.25\linewidth]{graph}
@@ -68,7 +68,7 @@ Each implementation follows the same standard (Fig.\ 2): Firstly, client process
 \hspace{-0.51cm}A graph can grow immensely due to massive real-world training sets. To ensure efficiency while dealing with such graphs, we need parallelism in terms of task and data. This is why we have to utilize HPC clusters in the first place to save us a huge amount of the computation time.\ As we are going to focus on how to achieve efficiency and scalability while programming with TensorFlow on HPC systems, we first have to take a closer look at the distributed implementation of TensorFlow.
 
 
-\section{Distributed (Multiple-Device) Implementation of Tensorflow} % (fold)
+\section{Distributed Implementation of Tensorflow} % (fold)
 \label{sec:multiple_device_execution_of_a_graph}
 In large-scale machine learning, we have to deal with massive data sets over thousands of petabytes. In order to train a model on such data set and construct a dataflow graph for the model, we need to parallelize our node execution and also divide our data into subsets across multiple devices of our system.
 \\ \\If we consider a system with a single device, the execution is fairly simple: A worker process is created for the device. Data is placed into the memory and all the nodes are mapped to the same device. The device executes them in an order according to the control dependencies between the nodes. However, in the case of an HPC system with multiple devices and workers running on different machines, we encounter a handful of programming challenges as to memory management, mapping of the nodes to the different devices and intercommunication between them which includes any type of data transmission (e.g.\ transmitting output of a node to another node as input) required for an operation to be executed \cite{first}.
@@ -149,12 +149,13 @@ TensorFlow provides features and mechanisms to ensure the code portability acros
 
 \section{Optimizations outside of TensorFlow - Horovod} % (fold)
 \label{sec:optimization_outside_of_tensorFlow}
-Horovod is one of the frameworks that accelerates the training of large-scale deep learning models on distributed systems by exploiting the standard execution mechanism of Tensorflow. Motivation for Horovod Project is to develop large-scale ML-applications by utilizing multiple GPUs simultaneously. Fundamental concepts of Horovod are based on the MPI library, which is specifically designed for HPC systems and enables the intercommunication between the worker processes over the network of distributed clusters \cite{sixth}.
-
+Horovod is one of the frameworks by Uber that accelerates the training of large-scale deep learning models on HPC systems by exploiting the distributed implementation of Tensorflow. Motivation for Horovod Project is to develop large-scale ML-applications by utilizing multiple GPUs simultaneously. Fundamental concepts of Horovod are based on the MPI library, which is specifically designed for HPC systems and enables the intercommunication between the worker processes over the network of distributed clusters \cite{sixth}.
+\\ \\As Tensorflow has become an attractive framework for deep learning at Uber, engineering team decided to optimize the training of their models even further. While using the traditional distributed Tensorflow, they have allegedly encountered two major challenges: 1.\ How does the optimal distributed communication structure look like for parameter updates in the model? 2.\ How to reduce the increased complexity of a TensorFlow program, as the model scales \cite{seventh}?
+\\ \\As to the first challenge, they came up with an algorithm called Ring All-reduce for averaging/combining multiple parameters (mostly gradients) of the model computed by several different devices in the network. It is a more efficient way than the common communication algorithm of MPI called All-reduce. This new approach reduces the communication effort and speeds up the training process by, where each device sends data in a ring-like order instead of sending the data to all the other devices \cite{sixth} \cite{seventh}.
+\\ \\To overcome the second challenge, they simplified the programming by developing a new API that wraps the default TensorFlow API and allows developers to parallelize their models with only a few additional lines of code. This new API also enabled developers to much easily debug and profile their code on a distributed system \cite{seventh}.
 
 \section{Summary} % (fold)
 \label{sec:summary}
-
 
 
 
@@ -178,6 +179,9 @@ Essential documentation, Retrieved from https://www.tensorflow.org/guide
 
 \bibitem{sixth}
 Horovod documentation, Retrieved from https://horovod.readthedocs.io/
+
+\bibitem{seventh}
+Alex Sergeev, Mike Del Balso (October 17, 2017): Meet Horovod: Uber’s Open Source Distributed Deep Learning Framework for TensorFlow
 \end{thebibliography}
 
 
