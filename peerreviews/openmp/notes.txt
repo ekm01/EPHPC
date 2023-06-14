@@ -1,6 +1,0 @@
-1. title
-2. repetition of some sentences
-3. very illustrative introduction
-4. creating threads not forking page 2 thread creation
-5. lack of punctuation leads to confusing sentences
-
